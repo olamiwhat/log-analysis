@@ -1,59 +1,80 @@
-#!/usr/bin/env python3
-
+#!/usr/bin/python3
 import psycopg2
 
+DBNAME = "news"
+QUERY1 = """select articles.title, count(log.path) as views
+            from articles, log
+            where log.path = ('/article/'||articles.slug)
+            group by articles.title
+            order by views desc limit 3;"""
+QUERY2 = """select authors.name, count(log.path) as views
+            from articles, authors, log
+            where articles.author = authors.id
+            and log.path = ('/article/'||articles.slug)
+            group by authors.name
+            order by views desc;"""
+QUERY3 = """select to_char(time :: date, 'Month dd, yyyy') as day,
+            round(
+            (cast(count(case when status !='200 OK' then 0 end)
+            as float)/
+            cast(count(status) as float)*100.00)
+            ::numeric, 2) as percent_error
+            from log
+            group by day
+            having round(
+            (cast(count(case when status !='200 OK' then 0 end)
+            as float)/
+            cast(count(status) as float)*100.00)
+            ::numeric, 2) > 1.00;"""
+
 try:
-	DBNAME = "news"
-	db_conn = psycopg2.connect(database=DBNAME)
+    db_conn = psycopg2.connect(database=DBNAME)
+except psycopg2.Error as err:
+    print("Error connecting to database")
 
-	def top3_articles():
-		'''Returns the most popular 3 articles'''
-		c = db_conn.cursor()
-		c.execute("""select articles.title, count(log.path) as views
-					from articles, log
-					where log.path = ('/article/'||articles.slug)
-					group by articles.title
-					order by views desc limit 3;""")
-		result = c.fetchall()
-		return result
+c = db_conn.cursor()
 
 
-	print("The most popular 3 articles of all time are: ")
-	print(top3_articles())
+def top3_articles():
+    '''Returns the most popular 3 articles'''
+    c.execute(QUERY1)
+    top_articles = c.fetchall()
+    print("The most popular 3 articles of all time are: ")
+    for row in top_articles:
+        print("*{} - {} views".format(row[0], row[1]))
 
 
-	def top_authors():
-		'''Returns the most popular article authors of all time'''
-		c = db_conn.cursor()
-		c.execute("""select authors.name, count(log.path) as views
-					from articles, authors, log
-					where articles.author = authors.id
-					and log.path = ('/article/'||articles.slug)
-					group by authors.name
-					order by views desc;""")
-		result = c.fetchall()
-		return result
-
-	print("The most popular articles authors of all time are: ")
-	print(top_authors())
+top3_articles()
+print("\n")
 
 
-	def days_more_than_one_percent_error():
-		'''Returns days where vmore than 1% of requests lead to errors'''
-		c = db_conn.cursor()
-		c.execute("""select to_char(time :: date, 'Month dd, yyyy') as day,
-					round((cast(count(case when status !='200 OK' then 0 end) as float)/cast(count(status) as float)*100.00)::numeric, 2) as percent_error
-					from log
-					group by day
-					having round((cast(count(case when status !='200 OK' then 0 end) as float)/cast(count(status) as float)*100.00)::numeric, 2) > 1.00;""")
-		result = c.fetchall()
-		return result
+def top_authors():
+    '''Returns the most popular article authors of all time'''
+    c.execute(QUERY2)
+    top_authors = c.fetchall()
+    print("The most popular article authors of all time are: ")
+    for row in top_authors:
+        print("*{} - {} views".format(row[0], row[1]))
 
 
-	print("The day(s) where more than one percent of requests lead to errors is/are: ")
-	print(days_more_than_one_percent_error())
-except psycopg2.Error as e :
-	print ("Error while connecting to database", e)
+top_authors()
+print("\n")
+
+
+def days_more_than_one_percent_error():
+    '''Returns days where more than 1% of requests lead to errors'''
+    c.execute(QUERY3)
+    days_error = c.fetchall()
+    print("The day(s) more than 1 percent of requests led to errors is/are: ")
+    for row in days_error:
+        print("*{} - {} percent".format(row[0], row[1]))
+
+
+days_more_than_one_percent_error()
+print("\n")
+
 
 db_conn.close()
-print ("psycopg2 connection is closed")
+
+
+print("psycopg2 connection is closed")
