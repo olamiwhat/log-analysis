@@ -1,65 +1,24 @@
 
-***RESULT FROM RUNNING AS SQL STATEMENTS***
+***OUTPUT FROM RUNNING PYTHON SCRIPT***
 
 QUESTION 1: What are the most popular 3 articles of all time?
 
-select articles.title, count(log.path) as views
-from articles, log
-where log.path = ('/article/'||articles.slug)
-group by articles.title
-order by views desc
-limit 3;
-
-              title               | views
-----------------------------------+--------
- Candidate is jerk, alleges rival | 338647
- Bears love berries, alleges bear | 253801
- Bad things gone, say good people | 170098
-(3 rows)
-
+The most popular 3 articles of all time are:
+*Candidate is jerk, alleges rival - 338647 views
+*Bears love berries, alleges bear - 253801 views
+*Bad things gone, say good people - 170098 views
 
 
 QUESTION 2: Who are the most popular articles author of all time?
 
-select authors.name, count(log.path) as views
-from articles, authors, log
-where articles.author = authors.id
-and log.path = ('/article/'||articles.slug)
-group by authors.name
-order by views desc;
-
-          name          | views
-------------------------+--------
- Ursula La Multa        | 507594
- Rudolf von Treppenwitz | 423457
- Anonymous Contributor  | 170098
- Markoff Chaney         |  84557
-(4 rows)
-
+The most popular article authors of all time are:
+*Ursula La Multa - 507594 views
+*Rudolf von Treppenwitz - 423457 views
+*Anonymous Contributor - 170098 views
+*Markoff Chaney - 84557 views
 
 
 QUESTION 3: On what days did more than 1% of requests lead to errors?
 
-select to_char(time :: date, 'Month dd, yyyy') as day,
-round((cast(count(case when status !='200 OK' then 0 end) as float)/cast(count(status) as float)*100.00)::numeric, 2) as percent_error
-from log
-group by day
-Having round((cast(count(case when status !='200 OK' then 0 end) as float)/cast(count(status) as float)*100.00)::numeric, 2) > 1.00;
-
-        day         | percent_error
---------------------+---------------
- July      17, 2016 |          2.26
-(1 row)
-
-
-
-***RESULT FROM RUNNING PYTHON FILE***
-
-The most popular 3 articles of all time are:
-[('Candidate is jerk, alleges rival', 338647L), ('Bears love berries, alleges bear', 253801L), ('Bad things gone, say good people', 170098L)]
-
-The most popular articles authors of all time are:
-[('Ursula La Multa', 507594L), ('Rudolf von Treppenwitz', 423457L), ('Anonymous Contributor', 170098L), ('Markoff Chaney', 84557L)]
-
-The day(s) where more than one percent of requests lead to errors is/are:
-[('July      17, 2016', Decimal('2.26'))]
+The day(s) more than 1 percent of requests led to errors is/are:
+*July      17, 2016 - 2.26 percent
