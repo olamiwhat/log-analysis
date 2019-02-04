@@ -13,7 +13,12 @@ The script is wriiten in python, connects to the database and uses SQL queries t
 This tool provides a way to draw conclusions from data. In this project, the reporting tool and the web server connect to the same databse allowing information to flow from the web server into the report.
 
 ## Getting Started
-Running this reporting script involves having the following tools installed on your computer: python, virtualBox, Vagrant and a Virtual Machine(VM). The Vagrant and VirtualBox are used to install and manage the VM. You also need a terminal. You can use the regular terminal if you are on Mac or Linux. For Windows, you can use Git Bash. it can be downloaded [here](https://git-scm.com/downloads)
+Running this reporting script involves having the following tools installed on your computer:
+- python
+- virtualBox
+- Vagrant
+- Virtual Machine(VM).
+The Vagrant and VirtualBox are used to install and manage the VM. You also need a terminal. You can use the regular terminal if you are on Mac or Linux. For Windows, you can use Git Bash. it can be downloaded [here](https://git-scm.com/downloads)
 
 ### Python Installation
 If you are on Linux, you probably already have python installed with your distro. However, to download and install python, follow the instruction [here](https://realpython.com/installing-python/)
@@ -44,7 +49,7 @@ Either way, you will end up with a new directory containing the VM files. From y
   - `-f newsdata.sql` - runs the SQL statements in the file newsdata.sql
 
 ## Running the Reporting Tool
-The reporting tool is the `news.py` file. Download this file in the same directory as the database data and from your terminal run `python news.py`. You should get an output that looks like this: 
+The reporting tool is the `news.py` file. Download this file in the same directory as the database data and from your terminal run `./news.py`. You should get an output that looks like this: 
 ```
 The most popular 3 articles of all time are:
 *Candidate is jerk, alleges rival - 338647 views
