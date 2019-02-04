@@ -36,7 +36,7 @@ c = db_conn.cursor()
 
 
 def top3_articles():
-    '''Returns the most popular 3 articles'''
+    '''Prints the most popular 3 articles'''
     c.execute(QUERY1)
     top_articles = c.fetchall()
     print("The most popular 3 articles of all time are: ")
@@ -49,7 +49,7 @@ print("\n")
 
 
 def top_authors():
-    '''Returns the most popular article authors of all time'''
+    '''Prints the most popular article authors of all time'''
     c.execute(QUERY2)
     top_authors = c.fetchall()
     print("The most popular article authors of all time are: ")
@@ -62,7 +62,7 @@ print("\n")
 
 
 def days_more_than_one_percent_error():
-    '''Returns days where more than 1% of requests lead to errors'''
+    '''Prints days where more than 1% of requests lead to errors'''
     c.execute(QUERY3)
     days_error = c.fetchall()
     print("The day(s) more than 1 percent of requests led to errors is/are: ")
