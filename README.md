@@ -1,5 +1,5 @@
 # Log Analysis
-This project is a part of Udacity's Full Stack Web Developer Nanodegree. it is a reporting tool that explores the basic concepts of python, relational databasees, joins, queries and sub-queries.
+A reporting tool that explores the basic concepts of python, relational databasees, joins, queries and sub-queries.
 
 ## The Database
 The database is a fictional PostgreSQL news website database. It contains tables such as Articles, Authors and Log. The articles table contains information such as author, title, slug, lead, time, etc. The Authors table conatins informationm such as name, bio and id while the Log table contains information such as the web server log for the site. The log has a databse row for each time a reader loaded a webpage.
